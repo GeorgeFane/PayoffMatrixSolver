@@ -1,0 +1,42 @@
+{
+  "name": "RatingsMap",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://georgefane.github.io/ratingsmap/",
+  "dependencies": {
+    "@material-ui/core": "latest",
+    "@material-ui/data-grid": "^4.0.0-alpha.32",
+    "@material-ui/icons": "^4.11.2",
+    "axios": "^0.21.1",
+    "gh-pages": "^3.2.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3"
+  },
+  "scripts": {
+    "start": "PORT=8080 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
