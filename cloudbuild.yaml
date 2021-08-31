@@ -1,0 +1,4 @@
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy', 'pmsolver', '--trigger-http', '--runtime', 'python39']
+  dir: '/function/'
