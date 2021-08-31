@@ -4,8 +4,13 @@ from collections import Counter
 import numpy as np
 
 def main(values):
+    print(values)
+
     a = np.array(values)
+    print(a)
+
     shape = a.shape
+    print(shape)
     s, p = shape[0], shape[-1]
 
     cords = list(
@@ -53,4 +58,15 @@ def pmsolver(request):
     }
 
     print(request)
-    return ({ 'data': main(request.json) }, 200, headers)
+    return ({ 'data': main(request.get_json()['data']) }, 200, headers)
+
+# print(main(
+#     [
+#         [
+#             [1, 2], [3, 4]
+#         ],
+#         [
+#             [5, 6], [7, 8]
+#         ]
+#     ]
+# ))    
