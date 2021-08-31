@@ -78,35 +78,16 @@ export default function SearchAppBar(props) {
                     </IconButton>
 
                     <Typography variant="h6" className={classes.title}>
-                        RatingsMap
+                        Payoff Matrix Solver
                     </Typography>
 
                     <Typography variant="body1" className={classes.title}>
-                        Generate heatmaps for TV show ratings
+                        Solve economic games with any number of players and strategies
                     </Typography>
-
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <Search />
-                        </div>
-
-                        <form onSubmit={props.onSubmit}>
-                            <InputBase
-                                value={props.text}
-                                onChange={props.onChange}
-                                placeholder="Search Show"
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </form>
-                    </div>
 
                     <IconButton
                         color="inherit"
-                        href='https://github.com/GeorgeFane/ratingsmap'
+                        href='https://github.com/GeorgeFane/PayoffMatrixSolver'
                         target='_blank'
                     >
                         <GitHub />
