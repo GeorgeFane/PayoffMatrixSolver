@@ -1,5 +1,5 @@
 import React, { useState, Component } from 'react';
-import { Grid, Paper, TextField, Typography, Button, Toolbar, Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
+import { Grid, Paper, TextField, Typography, Button, Toolbar, Accordion, AccordionDetails, AccordionSummary, Tooltip } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import { ExpandMore } from '@material-ui/icons';
@@ -24,6 +24,9 @@ const useStyles = theme => ({
         justifyContent: "center",
         height: '100%',
     },
+    item: {
+        minWidth: 111,
+    }
 });
 
 const width = 133;
@@ -98,6 +101,7 @@ class App extends Component {
     }
 
     Dgrid() {
+        const { classes } = this.props;
         const { loading, indexes, tensor } = this.state;
         if (!tensor) {
             return <div />;
@@ -107,7 +111,10 @@ class App extends Component {
             { id, index, payoff }
         ));
 
-        const data = { rows, columns, loading, autoHeight: true }
+        const data = {
+            rows, columns, loading,
+            autoHeight: true,
+        }
         return <DataGrid {...data} />;
     }
 
@@ -148,22 +155,21 @@ class App extends Component {
 
                 <div className={classes.root}>
 
-                    <Typography variant='h6'>
-                        If the 'Payoff Matrix' field is blank, a random payoff matrix is generated. You can input your matrix flat or nested.
-                    </Typography>
-
-                    <Grid container spacing={1}>
+                    <Grid container
+                        spacing={1}
+                        className={classes.item}
+                    >
                         
-                        <Grid item xs>
-                            <Paper className={classes.paper}>                    
+                        <Grid item>
+                            <Paper className={classes.paper}>
                                 <Typography variant='h6'>
                                     Input Payoff Matrix:
                                 </Typography>
                             </Paper>
                         </Grid>
 
-                        <Grid item xs>
-                            <Paper className={classes.paper}>                    
+                        <Grid item>
+                            <Paper className={classes.paper}>
                                 <TextField 
                                     label="No. Players" type='number' required
                                     value={players}
@@ -175,8 +181,8 @@ class App extends Component {
                             </Paper>
                         </Grid>
                         
-                        <Grid item xs>
-                            <Paper className={classes.paper}>                    
+                        <Grid item>
+                            <Paper className={classes.paper}>
                                 <TextField 
                                     label="No. Strategies" type='number' required
                                     value={strats}
@@ -188,16 +194,23 @@ class App extends Component {
                             </Paper>
                         </Grid>
 
-                        <Grid item xs>
-                            <Paper className={classes.paper}>                    
-                                <TextField 
-                                    label="Payoff Matrix"
-                                    value={matrix}
-                                    onChange={event => {
-                                        const matrix = event.target.value;
-                                        this.setState({ matrix });
-                                    }}
-                                />
+                        <Grid item>
+                            <Paper className={classes.paper}>
+                                <Tooltip title={
+                                    <Typography variant='h6'>
+                                        If the 'Payoff Matrix' field is blank, a random payoff matrix is generated. You can input your matrix flat or nested.
+                                    </Typography>
+                                }>
+
+                                    <TextField 
+                                        label="Payoff Matrix"
+                                        value={matrix}
+                                        onChange={event => {
+                                            const matrix = event.target.value;
+                                            this.setState({ matrix });
+                                        }}
+                                    />
+                                </Tooltip>
                             </Paper>
                         </Grid>
                     </Grid>
@@ -223,7 +236,7 @@ class App extends Component {
 
                     </Grid>
 
-                    <Grid item>
+                    <Grid item className={classes.root}>
 
                         {this.Dgrid()}
                         
