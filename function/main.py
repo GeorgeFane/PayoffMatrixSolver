@@ -1,16 +1,14 @@
 import itertools
 from collections import Counter
+import json
 
 import numpy as np
 
 def main(values):
-    print(values)
-
     a = np.array(values)
     print(a)
 
     shape = a.shape
-    print(shape)
     s, p = shape[0], shape[-1]
 
     cords = list(
@@ -29,11 +27,8 @@ def main(values):
 
     freqs = Counter(locals)
     opts = [x for x, y in freqs.items() if y == p]
-    rtn = [
-        (opt, a[opt].tolist())
-        for opt in opts
-    ]
-    return rtn
+
+    return opts
 
 def pmsolver(request):
     # For more information about CORS and CORS preflight requests, see:
@@ -60,4 +55,4 @@ def pmsolver(request):
     print(request)
     return ({ 'data': main(request.get_json()['data']) }, 200, headers)
 
-# print(main([[[6, 5], [0, 1]], [[4, 4], [1, 0]]]))
+print(main( [[[6, 5], [0, 1]], [[4, 4], [1, 0]]] ))
