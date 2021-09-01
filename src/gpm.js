@@ -5,7 +5,7 @@ const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].
 
 function solve(players, strats) {
     const shape = new Array(players).fill(strats).concat(players)
-    const tensor = tf.randomUniform(shape, 0, 9, 'int32');
+    const tensor = tf.randomUniform(shape, 0, players * Math.pow(strats, players), 'int32');
     tensor.print();
 
     const inputs = new Array(players - 1).fill( range(strats).arraySync() )

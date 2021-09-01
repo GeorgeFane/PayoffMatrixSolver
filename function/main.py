@@ -33,8 +33,13 @@ def main(values):
 
     freqs = Counter(locals)
     opts = [x for x, y in freqs.items() if y == p]
-    print(json.dumps(opts))
-    return opts
+
+    rtn = [
+        [opt, a[opt].tolist()]
+        for opt in opts
+    ]
+    print(json.dumps(rtn))
+    return rtn
 
 def pmsolver(request):
     # For more information about CORS and CORS preflight requests, see:

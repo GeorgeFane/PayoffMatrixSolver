@@ -4,17 +4,10 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import { ExpandMore } from '@material-ui/icons';
 
-import * as gpm from './gpm';
 import Header from './Header';
 
+const axios = require('axios');
 const tf = require('@tensorflow/tfjs');
-
-const width = 133;
-const columns = [
-    { field: 'id' },
-    { field: 'index', width },
-    { field: 'payoffs', width },
-];
 
 const useStyles = theme => ({
     root: {
@@ -33,6 +26,15 @@ const useStyles = theme => ({
     },
 });
 
+const width = 133;
+const columns = [
+    { field: 'id' },
+    { field: 'index', width },
+    { field: 'payoff', width },
+];
+
+const url = 'https://us-central1-georgefane.cloudfunctions.net/pmsolver';
+
 function getShape(players, strats) {
     const shape = new Array(players).fill(strats).concat(players)
     console.log(shape);
@@ -46,7 +48,8 @@ function getTensor(shape, values = false) {
     }
     catch (error) {
         console.log(error);
-        tensor = tf.randomUniform(shape, 0, 9, 'int32');
+        const top = shape.reduce( (a, b) => a * b);
+        tensor = tf.randomUniform(shape, 0, top, 'int32');
     }
 
     tensor.print();
@@ -62,11 +65,12 @@ class App extends Component {
             rows: [],
             loading: false,
             matrix: '',
-            tensor: [],
+            tensor: false,
+            indexes: [],
         };
     }
 
-    onClick = () => {
+    onClick = async () => {
         const { players, strats, matrix } = this.state;
 
         const shape = getShape(players, strats);
@@ -77,14 +81,61 @@ class App extends Component {
         catch {
             values = null;
         }
+
         const tensor = getTensor(shape, values);
         this.setState({ tensor });
+
+        const data = tensor.arraySync();
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+        const resp = await axios.post(url, { data, headers });
+        console.log(resp);
+        const indexes = resp.data.data;
+        console.log(indexes);
+        this.setState({ indexes });
     }
 
     Dgrid() {
-        const { rows, loading } = this.state;
+        const { loading, indexes, tensor } = this.state;
+        if (!tensor) {
+            return <div />;
+        }
+
+        const rows = indexes.map( (index, id) => {
+            const payoff = tf.gatherND(tensor, [index]).arraySync()[0];
+            return { id, index, payoff };
+        });
+
         const data = { rows, columns, loading, autoHeight: true }
         return <DataGrid {...data} />;
+    }
+
+    Accord() {
+        const { classes } = this.props;
+        const { loading, indexes, tensor } = this.state;
+        if (!tensor) {
+            return <div />;
+        }
+
+        return (
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMore />}
+                >
+                    <Typography className={classes.heading}>
+                        Payoff Matrix
+                    </Typography>
+                </AccordionSummary>
+
+                <AccordionDetails>
+                    <Typography component='pre'>
+                        {tensor.toString(true)}
+                    </Typography>
+                </AccordionDetails>
+            </Accordion>
+        )
     }
 
     render() {
@@ -107,7 +158,7 @@ class App extends Component {
                         <Grid item xs>
                             <Paper className={classes.paper}>                    
                                 <Typography variant='h6'>
-                                    Generate Random Matrix:
+                                    Input Payoff Matrix:
                                 </Typography>
                             </Paper>
                         </Grid>
@@ -169,26 +220,14 @@ class App extends Component {
 
                     <Grid item>
 
-                        {this.Dgrid()}
-                        
+                        {this.Accord()}
+
                     </Grid>
 
-                    <Grid item xs>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMore />}
-                            >
-                                <Typography className={classes.heading}>
-                                    Payoff Matrix
-                                </Typography>
-                            </AccordionSummary>
+                    <Grid item>
 
-                            <AccordionDetails>
-                                <Typography component='pre'>
-                                    {tensor.toString(true)}
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
+                        {this.Dgrid()}
+                        
                     </Grid>
 
                 </Grid>
