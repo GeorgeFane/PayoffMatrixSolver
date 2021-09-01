@@ -30,7 +30,7 @@ def main(values):
     freqs = Counter(locals)
     opts = [x for x, y in freqs.items() if y == p]
     rtn = [
-        (opt, a[opt])
+        (opt, a[opt].tolist())
         for opt in opts
     ]
     return rtn
@@ -60,13 +60,4 @@ def pmsolver(request):
     print(request)
     return ({ 'data': main(request.get_json()['data']) }, 200, headers)
 
-# print(main(
-#     [
-#         [
-#             [1, 2], [3, 4]
-#         ],
-#         [
-#             [5, 6], [7, 8]
-#         ]
-#     ]
-# ))    
+# print(main([[[6, 5], [0, 1]], [[4, 4], [1, 0]]]))

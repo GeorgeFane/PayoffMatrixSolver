@@ -19,7 +19,7 @@ const columns = [
 const useStyles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(3),
+        padding: theme.spacing(1),
     },
     title: {
         padding: theme.spacing(1),
