@@ -11,9 +11,11 @@ def main(values):
     shape = a.shape
     s, p = shape[0], shape[-1]
 
-    cords = list(
-        itertools.product(
-            np.arange(s), repeat=p-1
+    cords = np.array(
+        list(    
+            itertools.product(
+                np.arange(s), repeat=p-1
+            )
         )
     ) 
     locals = []
@@ -21,13 +23,17 @@ def main(values):
         b = a.swapaxes(i, p).take(i, axis=i)
 
         for cord in cords:
-            copy = list(cord)
-            copy.insert(i, b[cord].argmax()) 
-            locals.append(tuple(copy))
+            copy = cord.copy()
+            
+            locals.append(
+                tuple(
+                    np.insert(copy, i, b[cord].argmax()).tolist()
+                )
+            )
 
     freqs = Counter(locals)
     opts = [x for x, y in freqs.items() if y == p]
-
+    print(json.dumps(opts))
     return opts
 
 def pmsolver(request):
@@ -55,4 +61,4 @@ def pmsolver(request):
     print(request)
     return ({ 'data': main(request.get_json()['data']) }, 200, headers)
 
-print(main( [[[6, 5], [0, 1]], [[4, 4], [1, 0]]] ))
+main( [[[6, 5], [0, 1]], [[4, 4], [1, 0]]] )
