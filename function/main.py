@@ -1,4 +1,4 @@
-import itertools
+from itertools import product
 from collections import Counter
 import json
 
@@ -6,32 +6,29 @@ import numpy as np
 
 def main(values):
     a = np.array(values)
-    print(a)
-
     shape = a.shape
     s, p = shape[0], shape[-1]
 
     cords = np.array(
         list(    
-            itertools.product(
+            product(
                 np.arange(s), repeat=p-1
             )
         )
-    ) 
+    )
+    print(list(product(np.arange(s), repeat=p-1)) )
+    print(cords)
     locals = []
     for i in range(p):
         b = a.swapaxes(i, p).take(i, axis=i)
 
         for cord in cords:
-            copy = cord.copy()
-            
-            locals.append(
-                tuple(
-                    np.insert(copy, i, b[cord].argmax()).tolist()
-                )
-            )
+            copy = cord.tolist()
+            copy.insert(i, int(b[tuple(copy)].argmax()))
+            locals.append(tuple(copy))
 
     freqs = Counter(locals)
+    print(freqs)
     opts = [x for x, y in freqs.items() if y == p]
 
     rtn = [
@@ -66,4 +63,4 @@ def pmsolver(request):
     print(request)
     return ({ 'data': main(request.get_json()['data']) }, 200, headers)
 
-main( [[[6, 5], [0, 1]], [[4, 4], [1, 0]]] )
+main( [[[[15, 1 , 17],        [15, 4 , 6 ]],        [[10, 15, 18],        [13, 2 , 10]]],        [[[12, 22, 6 ],        [23, 17, 14]],        [[21, 23, 119],        [1 , 10, 23]]]] )

@@ -103,10 +103,9 @@ class App extends Component {
             return <div />;
         }
 
-        const rows = indexes.map( (index, id) => {
-            const payoff = tf.gatherND(tensor, [index]).arraySync()[0];
-            return { id, index, payoff };
-        });
+        const rows = indexes.map( ([index, payoff], id) => (
+            { id, index, payoff }
+        ));
 
         const data = { rows, columns, loading, autoHeight: true }
         return <DataGrid {...data} />;
